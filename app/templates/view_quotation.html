@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content">
+    <h2>View Quotations</h2>
+    <ul>
+        {% for quotation in quotations %}
+        <li>
+            <a href="{{ url_for('static', filename=quotation.pdf_path) }}" target="_blank">
+                Quotation #{{ quotation.id }} - ₹{{ quotation.total }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
