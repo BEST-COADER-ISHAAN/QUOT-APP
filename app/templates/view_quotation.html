@@ -1,16 +1,189 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotation {{ quotation['quotation'][0] }}</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #edf0f3, #cfd8dc);
+            color: white;
+            margin: 0;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: linear-gradient(135deg, #2a3d6e, #1a2b50);
+            color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-family: 'Georgia', serif;
+        }
+        header img {
+            height: 60px;
+        }
+        .content {
+            background-color: #ffffff;
+            color: #333;
+            padding: 30px;
+            margin: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .content h1 {
+            font-size: 28px;
+            color: #2a3d6e;
+        }
+        .info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #2a3d6e;
+        }
+        .details {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .details .box {
+            flex: 1;
+            padding: 20px;
+            background: linear-gradient(135deg, #f9f9f9, #e6e6e6);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .details h3 {
+            color: #2a3d6e;
+            margin-bottom: 10px;
+        }
+        .details p {
+            margin: 5px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table thead {
+            background: #2a3d6e;
+            color: white;
+        }
+        table th, table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        table tbody tr:nth-child(odd) {
+            background-color: #e6e6e6;
+        }
+        .total-section {
+            text-align: right;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2a3d6e;
+            margin-top: 20px;
+        }
+        footer {
+            background: linear-gradient(135deg, #2a3d6e, #1a2b50);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.8;
+            border-top: 3px solid #ffffff;
+        }
+        footer p {
+            margin: 5px 0;
+        }
+        footer p:first-child {
+            font-weight: bold;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
 
-{% block content %}
-<div class="content">
-    <h2>View Quotations</h2>
-    <ul>
-        {% for quotation in quotations %}
-        <li>
-            <a href="{{ url_for('static', filename=quotation.pdf_path) }}" target="_blank">
-                Quotation #{{ quotation.id }} - ₹{{ quotation.total }}
-            </a>
-        </li>
-        {% endfor %}
-    </ul>
-</div>
-{% endblock %}
+    <header>
+        <h1>Simpolo Tiles & Sanitaryware</h1>
+        <img src="https://via.placeholder.com/150x60?text=Logo" alt="Logo">
+    </header>
+
+    <div class="content">
+        <div class="info">
+            <div>Date: {{ quotation['quotation'][5] }}</div>
+            <div>Quotation No: {{ quotation['quotation'][0] }}</div>
+        </div>
+        <div class="details">
+            <!-- Quotation From -->
+            <div class="box">
+                <h3>Quotation From</h3>
+                <p><strong>Name:</strong> Simpolo Tiles & Sanitaryware</p>
+                <p><strong>Address:</strong> Main Road, Ajmer</p>
+                <p><strong>Contact:</strong> +91-1234567890</p>
+                <p><strong>Email:</strong> info@simpolotiles.com</p>
+            </div>
+            <!-- Quotation For -->
+            <div class="box">
+                <h3>Quotation For</h3>
+                <p><strong>Name:</strong> {{ quotation['quotation'][1] }}</p>
+                <p><strong>Address:</strong> {{ quotation['quotation'][2] }}</p>
+                <p><strong>Contact:</strong> {{ quotation['quotation'][3] }}</p>
+                <p><strong>Email:</strong> {{ quotation['quotation'][4] }}</p>
+            </div>
+        </div>
+
+        <h3>Product Information</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Size (mm)</th>
+                    <th>Surface</th>
+                    <th>Quantity</th>
+                    <th>Rate/Box</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in quotation['items'] %}
+                <tr>
+                    <td>{{ item[0] }}</td>
+                    <td>{{ item[1] }}</td>
+                    <td>{{ item[2] }}</td>
+                    <td>{{ item[3] }}</td>
+                    <td>₹{{ item[4] }}</td>
+                    <td>₹{{ item[5] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="total-section">
+            <p>Total Amount: ₹{{ quotation['quotation'][6] }}</p>
+            <p>Total in Words: {{ quotation['quotation'][7] }}</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>Note:</p>
+        <p>Prices are GST paid, including all taxes.</p>
+        <p>Payment 100% advance.</p>
+        <p>No return will be entertained.</p>
+        <p>No breakage will be entertained.</p>
+        <p>All prices are ex-godown Palra, Ajmer.</p>
+    </footer>
+
+</body>
+</html>

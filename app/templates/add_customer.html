@@ -1,23 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Add Customer</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <header>
-        <h1>Add Customer</h1>
-    </header>
-    <div class="form-container">
-        <form action="{{ url_for('add_customer') }}" method="POST">
-            <input type="text" name="name" placeholder="Customer Name" required>
-            <input type="text" name="address" placeholder="Address">
-            <input type="text" name="phone" placeholder="Phone">
-            <input type="email" name="email" placeholder="Email">
-            <button type="submit">Add Customer</button>
-        </form>
+
+<body class="text-gray-800 font-inter">
+
+    <!-- Sidebar -->
+    <div class="fixed left-0 top-0 w-64 h-full bg-gray-900 p-4 z-50 sidebar-menu transition-transform">
+        <a href="{{ url_for('dashboard') }}" class="flex items-center pb-4 border-b border-b-gray-800">
+            <img src="https://placehold.co/32x32" alt="Logo" class="w-8 h-8 rounded object-cover">
+            <span class="text-lg font-bold text-white ml-3">Quotation App</span>
+        </a>
+        <ul class="mt-4">
+            <li class="mb-1">
+                <a href="{{ url_for('dashboard') }}" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-800 rounded-md">
+                    <i class="ri-home-2-line mr-3 text-lg"></i>
+                    <span class="text-sm">Dashboard</span>
+                </a>
+            </li>
+            <li class="mb-1">
+                <a href="{{ url_for('add_customer') }}" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-800 rounded-md">
+                    <i class="ri-user-add-line mr-3 text-lg"></i>
+                    <span class="text-sm">Add Customer</span>
+                </a>
+            </li>
+            <li class="mb-1">
+                <a href="{{ url_for('logout') }}" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-800 rounded-md">
+                    <i class="ri-logout-box-line mr-3 text-lg"></i>
+                    <span class="text-sm">Logout</span>
+                </a>
+            </li>
+        </ul>
     </div>
+
+    <!-- Main Content -->
+    <main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-50 min-h-screen">
+        <div class="py-2 px-6 bg-white flex items-center shadow-md sticky top-0 left-0 z-30">
+            <h1 class="text-lg font-semibold text-gray-800">Add Customer</h1>
+        </div>
+
+        <section class="p-6">
+            <h2 class="text-xl font-semibold mb-4">Customer Details</h2>
+            <form action="{{ url_for('add_customer') }}" method="POST" class="bg-white p-6 rounded shadow-md">
+                <div class="mb-4">
+                    <label for="name" class="block text-sm font-medium text-gray-700">Customer Name</label>
+                    <input type="text" name="name" id="name" class="w-full border border-gray-300 rounded px-3 py-2 mt-1" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+                    <textarea name="address" id="address" class="w-full border border-gray-300 rounded px-3 py-2 mt-1" rows="3"></textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                    <input type="text" name="phone" id="phone" class="w-full border border-gray-300 rounded px-3 py-2 mt-1">
+                </div>
+
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" name="email" id="email" class="w-full border border-gray-300 rounded px-3 py-2 mt-1">
+                </div>
+
+                <div>
+                    <button type="submit" class="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
+                        Add Customer
+                    </button>
+                </div>
+            </form>
+        </section>
+    </main>
 </body>
+
 </html>

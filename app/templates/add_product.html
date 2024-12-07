@@ -1,28 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Add Product</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <header>
-        <h1>Add Product</h1>
-    </header>
-    <div class="form-container">
-        <form action="{{ url_for('add_product') }}" method="POST" enctype="multipart/form-data">
-            <input type="text" name="name" placeholder="Product Name" required>
-            <input type="text" name="size" placeholder="Size">
-            <input type="text" name="surface" placeholder="Surface Type">
-            <input type="number" name="rate_sq_ft" placeholder="Rate per Sq. Ft">
-            <input type="number" name="rate_per_box" placeholder="Rate per Box">
-            <input type="file" name="image">
-            <input type="text" name="link_360" placeholder="360 View Link">
-            <input type="text" name="website_link" placeholder="Website Link">
-            <textarea name="additional_details" placeholder="Additional Details"></textarea>
-            <button type="submit">Add Product</button>
-        </form>
+
+<body class="text-gray-800 font-inter">
+
+    <!-- Sidebar -->
+    <div class="fixed left-0 top-0 w-64 h-full bg-gray-900 p-4 z-50 sidebar-menu transition-transform">
+        <a href="{{ url_for('dashboard') }}" class="flex items-center pb-4 border-b border-b-gray-800">
+            <img src="https://placehold.co/32x32" alt="Logo" class="w-8 h-8 rounded object-cover">
+            <span class="text-lg font-bold text-white ml-3">Quotation App</span>
+        </a>
+        <ul class="mt-4">
+            <li class="mb-1">
+                <a href="{{ url_for('dashboard') }}" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-800 rounded-md">
+                    <i class="ri-home-2-line mr-3 text-lg"></i>
+                    <span class="text-sm">Dashboard</span>
+                </a>
+            </li>
+            <li class="mb-1">
+                <a href="{{ url_for('add_customer') }}" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-800 rounded-md">
+                    <i class="ri-user-add-line mr-3 text-lg"></i>
+                    <span class="text-sm">Add Customer</span>
+                </a>
+            </li>
+            <li class="mb-1">
+                <a href="{{ url_for('add_product') }}" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-800 rounded-md">
+                    <i class="ri-shopping-basket-line mr-3 text-lg"></i>
+                    <span class="text-sm">Add Product</span>
+                </a>
+            </li>
+            <li class="mb-1">
+                <a href="{{ url_for('logout') }}" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-800 rounded-md">
+                    <i class="ri-logout-box-line mr-3 text-lg"></i>
+                    <span class="text-sm">Logout</span>
+                </a>
+            </li>
+        </ul>
     </div>
+
+    <!-- Main Content -->
+    <main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-50 min-h-screen">
+        <div class="py-2 px-6 bg-white flex items-center shadow-md sticky top-0 left-0 z-30">
+            <h1 class="text-lg font-semibold text-gray-800">Add Product</h1>
+        </div>
+
+        <section class="p-6">
+            <h2 class="text-xl font-semibold mb-4">Product Details</h2>
+            <form action="{{ url_for('add_product') }}" method="POST" enctype="multipart/form-data" class="bg-white p-6 rounded shadow-md">
+                <div class="mb-4">
+                    <label for="name" class="block text-sm font-medium text-gray-700">Product Name</label>
+                    <input type="text" name="name" id="name" class="w-full border border-gray-300 rounded px-3 py-2 mt-1" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="size" class="block text-sm font-medium text-gray-700">Size (mm)</label>
+                    <input type="text" name="size" id="size" class="w-full border border-gray-300 rounded px-3 py-2 mt-1">
+                </div>
+
+                <div class="mb-4">
+                    <label for="surface" class="block text-sm font-medium text-gray-700">Surface</label>
+                    <input type="text" name="surface" id="surface" class="w-full border border-gray-300 rounded px-3 py-2 mt-1">
+                </div>
+
+                <div class="mb-4">
+                    <label for="rate_sq_ft" class="block text-sm font-medium text-gray-700">Rate per Sq. Ft.</label>
+                    <input type="number" name="rate_sq_ft" id="rate_sq_ft" class="w-full border border-gray-300 rounded px-3 py-2 mt-1">
+                </div>
+
+                <div class="mb-4">
+                    <label for="rate_per_box" class="block text-sm font-medium text-gray-700">Rate per Box</label>
+                    <input type="number" name="rate_per_box" id="rate_per_box" class="w-full border border-gray-300 rounded px-3 py-2 mt-1">
+                </div>
+
+                <div class="mb-4">
+                    <label for="image_url" class="block text-sm font-medium text-gray-700">Image URL</label>
+                    <input type="url" name="image_url" id="image_url" class="w-full border border-gray-300 rounded px-3 py-2 mt-1" placeholder="Enter image URL">
+                </div>
+
+                <div class="mb-4">
+                    <label for="link_360" class="block text-sm font-medium text-gray-700">360° View Link</label>
+                    <input type="url" name="link_360" id="link_360" class="w-full border border-gray-300 rounded px-3 py-2 mt-1">
+                </div>
+
+                <div class="mb-4">
+                    <label for="website_link" class="block text-sm font-medium text-gray-700">Website Link</label>
+                    <input type="url" name="website_link" id="website_link" class="w-full border border-gray-300 rounded px-3 py-2 mt-1">
+                </div>
+
+                <div class="mb-4">
+                    <label for="additional_details" class="block text-sm font-medium text-gray-700">Additional Details</label>
+                    <textarea name="additional_details" id="additional_details" class="w-full border border-gray-300 rounded px-3 py-2 mt-1" rows="4"></textarea>
+                </div>
+
+                <div>
+                    <button type="submit" class="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
+                        Add Product
+                    </button>
+                </div>
+            </form>
+        </section>
+    </main>
 </body>
+
 </html>

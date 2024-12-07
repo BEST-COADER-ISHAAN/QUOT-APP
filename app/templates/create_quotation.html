@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Create Quotation</title>
+</head>
+
+<body class="text-gray-800 font-inter">
+
+    <!-- Sidebar -->
+    <div class="fixed left-0 top-0 w-64 h-full bg-gray-900 p-4 z-50 sidebar-menu transition-transform">
+        <a href="{{ url_for('dashboard') }}" class="flex items-center pb-4 border-b border-b-gray-800">
+            <img src="https://placehold.co/32x32" alt="Logo" class="w-8 h-8 rounded object-cover">
+            <span class="text-lg font-bold text-white ml-3">Quotation App</span>
+        </a>
+        <ul class="mt-4">
+            <li class="mb-1">
+                <a href="{{ url_for('dashboard') }}" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-800 rounded-md">
+                    <i class="ri-home-2-line mr-3 text-lg"></i>
+                    <span class="text-sm">Dashboard</span>
+                </a>
+            </li>
+            <li class="mb-1">
+                <a href="{{ url_for('add_customer') }}" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-800 rounded-md">
+                    <i class="ri-user-add-line mr-3 text-lg"></i>
+                    <span class="text-sm">Add Customer</span>
+                </a>
+            </li>
+            <li class="mb-1">
+                <a href="{{ url_for('add_product') }}" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-800 rounded-md">
+                    <i class="ri-shopping-basket-line mr-3 text-lg"></i>
+                    <span class="text-sm">Add Product</span>
+                </a>
+            </li>
+            <li class="mb-1">
+                <a href="{{ url_for('create_quotation') }}" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-800 rounded-md">
+                    <i class="ri-file-add-line mr-3 text-lg"></i>
+                    <span class="text-sm">Create Quotation</span>
+                </a>
+            </li>
+            <li class="mb-1">
+                <a href="{{ url_for('logout') }}" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-800 rounded-md">
+                    <i class="ri-logout-box-line mr-3 text-lg"></i>
+                    <span class="text-sm">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-50 min-h-screen">
+        <div class="py-2 px-6 bg-white flex items-center shadow-md sticky top-0 left-0 z-30">
+            <h1 class="text-lg font-semibold text-gray-800">Create Quotation</h1>
+        </div>
+
+        <section class="p-6">
+            <h2 class="text-xl font-semibold mb-4">Quotation Details</h2>
+            <form action="{{ url_for('create_quotation') }}" method="POST" class="bg-white p-6 rounded shadow-md">
+                <!-- Customer Selection with Search -->
+                <div class="mb-4">
+                    <label for="customer_id" class="block text-sm font-medium text-gray-700">Select Customer</label>
+                    <div id="customer-dropdown" class="relative">
+                        <input type="text" id="customer-search" class="w-full border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search customer...">
+                        <ul id="customer-list" class="absolute w-full bg-white border border-gray-300 rounded mt-1 hidden max-h-60 overflow-y-auto z-10">
+                            {% for customer in customers %}
+                            <li data-id="{{ customer[0] }}" class="customer-option px-3 py-2 text-sm text-gray-700 cursor-pointer hover:bg-blue-500 hover:text-white">
+                                {{ customer[1] }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <input type="hidden" name="customer_id" id="customer_id">
+                    </div>
+                </div>
+
+                <!-- Products Section -->
+                <div id="products-section" class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Add Products</label>
+                    <div class="border border-gray-300 rounded px-3 py-2 mt-1">
+                        <div class="mb-4">
+                            <label for="product-search" class="block text-sm font-medium text-gray-700">Search Products</label>
+                            <div id="product-dropdown" class="relative">
+                                <input type="text" id="product-search" class="w-full border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search product...">
+                                <ul id="product-list" class="absolute w-full bg-white border border-gray-300 rounded mt-1 hidden max-h-60 overflow-y-auto z-10">
+                                    {% for product in products %}
+                                    <li data-id="{{ product[0] }}" class="product-option px-3 py-2 text-sm text-gray-700 cursor-pointer hover:bg-blue-500 hover:text-white">
+                                        {{ product[1] }}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        <table class="w-full border-collapse border border-gray-200">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="border border-gray-200 py-2 px-4">Product</th>
+                                    <th class="border border-gray-200 py-2 px-4">Size</th>
+                                    <th class="border border-gray-200 py-2 px-4">Surface</th>
+                                    <th class="border border-gray-200 py-2 px-4">Rate/sq. ft.</th>
+                                    <th class="border border-gray-200 py-2 px-4">Rate/Box</th>
+                                    <th class="border border-gray-200 py-2 px-4">Quantity</th>
+                                    <th class="border border-gray-200 py-2 px-4">Total</th>
+                                    <th class="border border-gray-200 py-2 px-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-table"></tbody>
+                        </table>
+                        <button type="button" id="add-row" class="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+                            Add Product
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Grand Total -->
+                <div class="mt-4">
+                    <h3 class="text-lg font-semibold">Grand Total: ₹<span id="grand-total">0</span></h3>
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button type="submit" class="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
+                        Submit Quotation
+                    </button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <!-- Scripts -->
+    <script>
+        const customerSearch = document.getElementById("customer-search");
+        const customerList = document.getElementById("customer-list");
+
+        // Search functionality for customers
+        customerSearch.addEventListener("input", function () {
+            const query = this.value.toLowerCase();
+            const options = customerList.querySelectorAll(".customer-option");
+            let found = false;
+            options.forEach(option => {
+                const name = option.textContent.toLowerCase();
+                if (name.includes(query)) {
+                    option.style.display = "block";
+                    found = true;
+                } else {
+                    option.style.display = "none";
+                }
+            });
+            customerList.style.display = found ? "block" : "none";
+        });
+
+        customerList.addEventListener("click", function (event) {
+            const selectedOption = event.target.closest(".customer-option");
+            if (selectedOption) {
+                customerSearch.value = selectedOption.textContent;
+                document.getElementById("customer_id").value = selectedOption.getAttribute("data-id");
+                customerList.style.display = "none";
+            }
+        });
+
+        const productSearch = document.getElementById("product-search");
+const productList = document.getElementById("product-list");
+
+// Search functionality for products
+productSearch.addEventListener("input", function () {
+    const query = this.value.toLowerCase();
+    const options = productList.querySelectorAll(".product-option");
+    let found = false;
+    options.forEach(option => {
+        const name = option.textContent.toLowerCase();
+        if (name.includes(query)) {
+            option.style.display = "block";
+            found = true;
+        } else {
+            option.style.display = "none";
+        }
+    });
+    productList.style.display = found ? "block" : "none";
+});
+
+productList.addEventListener("click", function (event) {
+    const selectedOption = event.target.closest(".product-option");
+    if (selectedOption) {
+        productSearch.value = selectedOption.textContent;
+        const productId = selectedOption.getAttribute("data-id");
+        // Add the selected product to the table (implement product addition logic here)
+        addProductToTable(productId, selectedOption.textContent);
+        productList.style.display = "none";
+    }
+});
+
+// Function to add selected product to the table
+function addProductToTable(productId, productName) {
+    const row = `
+        <tr>
+            <td class="border px-4 py-2">
+                <input type="text" name="product_name[]" class="w-full border px-2 py-1" value="${productName}" readonly>
+                <input type="hidden" name="product_id[]" value="${productId}">
+            </td>
+            <td class="border px-4 py-2">
+                <input type="text" name="size[]" class="w-full border px-2 py-1" placeholder="Size">
+            </td>
+            <td class="border px-4 py-2">
+                <input type="text" name="surface[]" class="w-full border px-2 py-1" placeholder="Surface">
+            </td>
+            <td class="border px-4 py-2">
+                <input type="number" name="rate_sq_ft[]" class="w-full border px-2 py-1 text-right">
+            </td>
+            <td class="border px-4 py-2">
+                <input type="number" name="rate_per_box[]" class="w-full border px-2 py-1 text-right">
+            </td>
+            <td class="border px-4 py-2">
+                <input type="number" name="quantity[]" class="w-full border px-2 py-1 text-right" value="1">
+            </td>
+            <td class="border px-4 py-2 text-right product-total">₹0</td>
+            <td class="border px-4 py-2 text-center">
+                <button type="button" class="text-red-600 remove-row">Remove</button>
+            </td>
+        </tr>`;
+    productsTable.insertAdjacentHTML("beforeend", row);
+    updateTotals();
+}
+
+
+        const productsTable = document.getElementById("products-table");
+        const grandTotalElement = document.getElementById("grand-total");
+
+        // Add new product row
+        document.getElementById("add-row").addEventListener("click", function () {
+            const row = `
+                <tr>
+                    <td class="border px-4 py-2">
+                        <input type="text" name="product_name[]" class="w-full border px-2 py-1" placeholder="Product Name">
+                    </td>
+                    <td class="border px-4 py-2">
+                        <input type="text" name="size[]" class="w-full border px-2 py-1" placeholder="Size">
+                    </td>
+                    <td class="border px-4 py-2">
+                        <input type="text" name="surface[]" class="w-full border px-2 py-1" placeholder="Surface">
+                    </td>
+                    <td class="border px-4 py-2">
+                        <input type="number" name="rate_sq_ft[]" class="w-full border px-2 py-1 text-right">
+                    </td>
+                    <td class="border px-4 py-2">
+                        <input type="number" name="rate_per_box[]" class="w-full border px-2 py-1 text-right">
+                    </td>
+                    <td class="border px-4 py-2">
+                        <input type="number" name="quantity[]" class="w-full border px-2 py-1 text-right" value="1">
+                    </td>
+                    <td class="border px-4 py-2 text-right product-total">₹0</td>
+                    <td class="border px-4 py-2 text-center">
+                        <button type="button" class="text-red-600 remove-row">Remove</button>
+                    </td>
+                </tr>`;
+            productsTable.insertAdjacentHTML("beforeend", row);
+            updateTotals();
+        });
+
+        // Remove product row
+        productsTable.addEventListener("click", function (event) {
+            if (event.target.classList.contains("remove-row")) {
+                event.target.closest("tr").remove();
+                updateTotals();
+            }
+        });
+
+        // Update product totals and grand total
+        function updateTotals() {
+            let grandTotal = 0;
+            productsTable.querySelectorAll("tr").forEach(row => {
+                const rate = parseFloat(row.querySelector('input[name="rate_per_box[]"]').value) || 0;
+                const quantity = parseInt(row.querySelector('input[name="quantity[]"]').value) || 0;
+                const total = rate * quantity;
+                row.querySelector(".product-total").textContent = `₹${total.toFixed(2)}`;
+                grandTotal += total;
+            });
+            grandTotalElement.textContent = grandTotal.toFixed(2);
+        }
+
+        // Update totals on input change
+        productsTable.addEventListener("input", function (event) {
+            if (event.target.name === "rate_per_box[]" || event.target.name === "quantity[]") {
+                updateTotals();
+            }
+        });
+    </script>
+</body>
+
+</html>

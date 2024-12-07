@@ -1,28 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <header>
-        <h1>Dashboard</h1>
-        <a href="{{ url_for('logout') }}">Logout</a>
-    </header>
-    <div class="dashboard-container">
-        <h2>Product Statistics</h2>
-        <canvas id="productChart"></canvas>
 
-        <h2>Recent Quotations</h2>
-        <ul>
-            {% for customer in recent_quotations %}
-                <li>{{ customer[1] }} - {{ customer[2] }}</li>
-            {% endfor %}
+<body class="text-gray-800 font-inter">
+
+    <!-- Sidebar -->
+    <div class="fixed left-0 top-0 w-64 h-full bg-gray-900 p-4 z-50 sidebar-menu transition-transform">
+        <a href="{{ url_for('dashboard') }}" class="flex items-center pb-4 border-b border-b-gray-800">
+            <img src="https://placehold.co/32x32" alt="Logo" class="w-8 h-8 rounded object-cover">
+            <span class="text-lg font-bold text-white ml-3">Quotation App</span>
+        </a>
+        <ul class="mt-4">
+            <li class="mb-1">
+                <a href="{{ url_for('dashboard') }}" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-800 rounded-md">
+                    <i class="ri-home-2-line mr-3 text-lg"></i>
+                    <span class="text-sm">Dashboard</span>
+                </a>
+            </li>
+            <li class="mb-1">
+                <a href="{{ url_for('add_customer') }}" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-800 rounded-md">
+                    <i class="ri-user-add-line mr-3 text-lg"></i>
+                    <span class="text-sm">Add Customer</span>
+                </a>
+            </li>
+            <li class="mb-1">
+                <a href="{{ url_for('add_product') }}" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-800 rounded-md">
+                    <i class="ri-shopping-basket-line mr-3 text-lg"></i>
+                    <span class="text-sm">Add Product</span>
+                </a>
+            </li>
+            <li class="mb-1">
+                <a href="{{ url_for('create_quotation') }}" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-800 rounded-md">
+                    <i class="ri-file-add-line mr-3 text-lg"></i>
+                    <span class="text-sm">Create Quotation</span>
+                </a>
+            </li>
+            <li class="mb-1">
+                <a href="{{ url_for('logout') }}" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-800 rounded-md">
+                    <i class="ri-logout-box-line mr-3 text-lg"></i>
+                    <span class="text-sm">Logout</span>
+                </a>
+            </li>
         </ul>
     </div>
+
+    <!-- Main Content -->
+    <main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-50 min-h-screen">
+        <div class="py-2 px-6 bg-white flex items-center shadow-md sticky top-0 left-0 z-30">
+            <h1 class="text-lg font-semibold text-gray-800">Dashboard</h1>
+        </div>
+
+        <!-- Product Trends Section -->
+        <section class="p-6">
+            <h2 class="text-xl font-semibold mb-4">Product Trends</h2>
+            <canvas id="productChart"></canvas>
+        </section>
+
+        <!-- Recent Quotations Section -->
+        <section class="p-6">
+            <h2 class="text-xl font-semibold mb-4">Recent Quotations</h2>
+            <table class="w-full border-collapse border border-gray-200">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="border border-gray-200 py-2 px-4">Quotation ID</th>
+                        <th class="border border-gray-200 py-2 px-4">Customer Name</th>
+                        <th class="border border-gray-200 py-2 px-4">Total Amount</th>
+                        <th class="border border-gray-200 py-2 px-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for quotation in recent_quotations %}
+                    <tr>
+                        <td class="border border-gray-200 py-2 px-4">{{ quotation[0] }}</td> <!-- Quotation ID -->
+                        <td class="border border-gray-200 py-2 px-4">{{ quotation[1] }}</td> <!-- Customer Name -->
+                        <td class="border border-gray-200 py-2 px-4">₹{{ quotation[2] }}</td> <!-- Total Amount -->
+                        <td class="border border-gray-200 py-2 px-4">
+                            <a href="{{ url_for('view_quotation', quotation_id=quotation[0]) }}" class="text-blue-600 hover:underline">
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+    <script>
+        const ctx = document.getElementById('productChart').getContext('2d');
+        const productData = {{ product_data|tojson }};
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: productData.map(item => item[0]),
+                datasets: [{
+                    label: 'Number of Products',
+                    data: productData.map(item => item[1]),
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
 </body>
+
 </html>
